@@ -1,0 +1,143 @@
+{
+  "NetworkTables": {
+    "SmartDashboard": {
+      "Drive 1": {
+        "open": true
+      },
+      "Drive 3": {
+        "open": true
+      },
+      "Turning 0": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Driver/Drive 1": "Subsystem",
+      "/LiveWindow/Driver/Drive 3": "Subsystem",
+      "/LiveWindow/Driver/Drive 5": "Subsystem",
+      "/LiveWindow/Driver/PID Controller": "PIDController",
+      "/LiveWindow/Drivetrain": "Subsystem",
+      "/LiveWindow/Turner/Turning 0": "Subsystem",
+      "/LiveWindow/Turner/Turning 2": "Subsystem",
+      "/LiveWindow/Turner/Turning 4": "Subsystem",
+      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[2]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[4]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[5]": "Digital Input",
+      "/LiveWindow/Ungrouped/Drive Motor 1[1]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Drive Motor 3[3]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Drive Motor 5[5]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Turn Motor 0[0]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Turn Motor 2[2]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Turn Motor 4[4]": "Motor Controller",
+      "/SmartDashboard/Drive 1": "Subsystem",
+      "/SmartDashboard/Drive 3": "Subsystem",
+      "/SmartDashboard/Drive 5": "Subsystem",
+      "/SmartDashboard/Example Command": "Command",
+      "/SmartDashboard/Turning 0": "Subsystem",
+      "/SmartDashboard/Turning 2": "Subsystem",
+      "/SmartDashboard/Turning 4": "Subsystem"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "100"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 229,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Drive 1/motor state"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Drive 1/controller output"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Drive 1/feed forward output"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 205,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Drive 1/velocity m per s"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 216,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Drive 1/velocity error m per s"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
