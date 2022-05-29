@@ -3,7 +3,10 @@ Swervo
 
 Swervo is a low-cost swerve drive base for FRC off-season training.
 
-![early version](https://lh3.googleusercontent.com/pw/AM-JKLU5W324m551WcTt9s02GFsR1zLNU0ic61S2itBy-5KxmewNi9g5cKshvYVDg4Loodz1M26W2R2P9ljiseLwrPE0rsTpSK4iVKe3cX0hcxXtxNjtbingirLs51d0lNKdwlpfat-CVSvDiatPj2ZqSuCxpw=w1045-h784-no)
+<p float="left">
+<img src="https://lh3.googleusercontent.com/pw/AM-JKLU5W324m551WcTt9s02GFsR1zLNU0ic61S2itBy-5KxmewNi9g5cKshvYVDg4Loodz1M26W2R2P9ljiseLwrPE0rsTpSK4iVKe3cX0hcxXtxNjtbingirLs51d0lNKdwlpfat-CVSvDiatPj2ZqSuCxpw=w1045-h784-no" width=400/>
+<img src="https://lh3.googleusercontent.com/pw/AM-JKLXDs0E_ESYiH2j7yeR9WbBAzc0wz3PJryhOczWUMS4HV44MlBlDzr9S-CSX22fXicfVXHN69Xihr636AoKLMcYhotuPu6nFxobEB_ToFxmBrIdkn65ryjRN492NwnPuIk7K1QZI9s8WAABR3_eZmZpNhw=w1045-h784-no" width=400/>
+</p>
 
 It enables hardware and software teams to iterate and experiment with
 issues like trajectory following, control tuning, and it can serve as
