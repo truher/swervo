@@ -13,6 +13,7 @@ There are Fusion 360 designs for both the [base](https://a360.co/3N4E435) and th
 
 Hardware TODO's:
 
-* The motors are expensive, constituting about half the system cost.  Consider alternatives?
+* 90mm wheels would produce 28% more speed than the 70mm, which might be nice.
+* The Parallax 360 motors are expensive, constituting about half the system cost.  Consider alternatives?  For example the [FeeTech FB5317M-360](https://www.robotshop.com/en/feetech-digital-servo-15kg-cm-fb5116m-w-feedback.html) is under $20, but less than half the speed.
 * Steering could be faster, and the steering gears are expensive.  Consider alternatives for steering.  Printed gears?
 * 6-channel slip rings are a few dollars cheaper than 12-channel, and would work, combining +/- wires for both motors.
