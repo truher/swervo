@@ -3,7 +3,7 @@ Swervo
 
 Swervo is a low-cost swerve drive base for FRC off-season training.
 
-![early version driving](https://photos.app.goo.gl/ufzaHw8fnDydqWgt5)
+![early version](https://photos.app.goo.gl/G8Z8rcd6YYoeeCyH9)
 
 It enables hardware and software teams to iterate and experiment with
 issues like trajectory following, control tuning, and it can serve as
