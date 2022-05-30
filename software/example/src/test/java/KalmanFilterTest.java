@@ -14,6 +14,7 @@ import edu.wpi.first.math.system.LinearSystem;
 // for experiments with kalman filter sensor fusion
 // gyro is fast and precise but integration yields drift
 // magnetometer is accurate but imprecise
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class KalmanFilterTest {
     public static final double DELTA = 1e-2;
 
