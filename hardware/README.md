@@ -15,9 +15,9 @@ Hardware TODO's:
 
 * 90mm wheels would produce 28% more speed than the 70mm, which might be nice.
 * The Parallax 360 motors are expensive, constituting about half the system cost.  Consider alternatives?
- * The [FeeTech FB5317M-360](https://www.robotshop.com/en/feetech-digital-servo-15kg-cm-fb5116m-w-feedback.html) is under $20, but less than half the speed.
- * The [FeeTech FT5303R](https://www.robotshop.com/en/feetech-continuous-turn-digital-servo-3kg-cm-ft5303r.html) is under $10, but lacks an encoder.
- * The [DFRobot TT](https://www.dfrobot.com/product-1457.html) motor is $7.40 but lacks a driver.  DF drivers are only a few dollars per channel, but it's more complexity.  Also the TT gears are fragile.
- * The [TI-RSLK](https://www.pololu.com/product/3675), also used in the Romi, is $16 but lacks a driver.
+  * The [FeeTech FB5317M-360](https://www.robotshop.com/en/feetech-digital-servo-15kg-cm-fb5116m-w-feedback.html) is under $20, but less than half the speed.
+  * The [FeeTech FT5303R](https://www.robotshop.com/en/feetech-continuous-turn-digital-servo-3kg-cm-ft5303r.html) is under $10, but lacks an encoder.
+  * The [DFRobot TT](https://www.dfrobot.com/product-1457.html) motor is $7.40 but lacks a driver.  DF drivers are only a few dollars per channel, but it's more complexity.  Also the TT gears are fragile.
+  * The [TI-RSLK](https://www.pololu.com/product/3675), also used in the Romi, is $16 but lacks a driver.
 * Steering could be faster, and the steering gears are expensive.  Consider alternatives for steering.  Printed gears?
 * 6-channel slip rings are a few dollars cheaper than 12-channel, and would work, combining +/- wires for both motors.
