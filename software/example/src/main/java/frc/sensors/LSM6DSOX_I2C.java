@@ -78,10 +78,14 @@ public class LSM6DSOX_I2C implements Sendable {
     private final I2C m_i2c;
     private LSM6DSOX_FS_G_T m_scale;
 
+    /**
+     * Use default of 500 degrees per sec. 250 dps seems too low.
+     * Update at 100hz, comfortably above robot period of 50hz.
+     */
     public LSM6DSOX_I2C() {
         this(LSM6DSOX_I2C_ADD_L,
-                LSM6DSOX_ODR_G_T.LSM6DSOX_GY_ODR_104Hz, // medium speed
-                LSM6DSOX_FS_G_T.LSM6DSOX_250dps);// most sensitive
+                LSM6DSOX_ODR_G_T.LSM6DSOX_GY_ODR_104Hz,
+                LSM6DSOX_FS_G_T.LSM6DSOX_500dps);
     }
 
     public LSM6DSOX_I2C(byte i2cAddress,
@@ -113,17 +117,21 @@ public class LSM6DSOX_I2C implements Sendable {
         m_i2c.write(LSM6DSOX_CTRL2_G, ctrl2);
     }
 
+
     /**
      * NWU yaw rate in radians/sec.
      */
     public double getRate() {
-        return (double) getYawRateRaw() * m_scale.mdps * Math.PI / 180000;
+        m_yawRateRaw = (double) getYawRateRaw();
+        return m_yawRateRaw * m_scale.mdps * Math.PI / 180000;
     }
+
+    public double m_yawRateRaw;
 
     /**
      * NWU yaw rate, 16 bits, signed.  Unit depends on full-scale setting.
      */
-    public int getYawRateRaw() {
+    private int getYawRateRaw() {
         ByteBuffer buf = ByteBuffer.allocate(2);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         m_i2c.read(LSM6DSOX_OUTZ_L_G, 2, buf);
@@ -133,7 +141,7 @@ public class LSM6DSOX_I2C implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Gyro");
-        builder.addDoubleProperty("yaw rate raw", this::getYawRateRaw, null);
+        builder.addDoubleProperty("yaw rate raw", () -> m_yawRateRaw, null);
     }
 
 }
