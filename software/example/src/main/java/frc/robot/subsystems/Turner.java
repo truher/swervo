@@ -26,7 +26,7 @@ import frc.motorcontrol.Parallax360;
 public class Turner extends ProfiledPIDSubsystem {
   private static final double kP = 0.05;
   private static final double kI = 0.05;
-  private static final double kD = 0.05;
+  private static final double kD = 0.0;
   // private static final double kMaxVelocity = 2.1;
   private static final double kMaxVelocity = 13.2; // scaled to radians
   // private static final int kMaxAcceleration = 8;
@@ -63,7 +63,7 @@ public class Turner extends ProfiledPIDSubsystem {
    */
   public Turner(int channel, double offsetInEncoderTurns) {
     super(
-        new ProfiledPIDController(kP * kGearRatio, kI, kD * kGearRatio,
+        new ProfiledPIDController(kP * kGearRatio, kI * kGearRatio, kD * kGearRatio,
             new TrapezoidProfile.Constraints(kMaxVelocity / kGearRatio, kMaxAcceleration / kGearRatio)),
         0);
     getController().enableContinuousInput(-Math.PI, Math.PI);
