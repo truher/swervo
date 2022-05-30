@@ -8,6 +8,7 @@ import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -21,31 +22,37 @@ import frc.util.Unroller;
  */
 public class FusedHeading implements Supplier<Rotation2d>, Sendable {
     private static final double kDtSec = 0.02;
-    // State is [position, velocity]
-    private static final Matrix<N2, N2> kA = Matrix.mat(Nat.N2(), Nat.N2()).fill(0, 1, 0, 0);
+    // State is [position, velocity, accel], so i can get a handle on the evolution of accel.
+    private static final Matrix<N3, N3> kA = Matrix.mat(Nat.N3(), Nat.N3()).fill(0, 1, 0.5, 0, 0, 1, 0, 0, 0);
     // Input is torque (unused for now)
-    private static final Matrix<N2, N1> kB = Matrix.mat(Nat.N2(), Nat.N1()).fill(0, 1);
-    // Output is [position, velocity] as measured by mag, gyro
-    private static final Matrix<N2, N2> kC = Matrix.mat(Nat.N2(), Nat.N2()).fill(1, 0, 0, 1);
+    private static final Matrix<N3, N1> kB = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 1);
+    // Output is [position, velocity] as measured by mag, gyro; accel is unmeasured.
+    private static final Matrix<N2, N3> kC = Matrix.mat(Nat.N2(), Nat.N3()).fill(1, 0, 0, 0, 1, 0);
+    // feedthrough is zero
     private static final Matrix<N2, N1> kD = Matrix.mat(Nat.N2(), Nat.N1()).fill(0, 0);
-    // High State stdev, for responsiveness.
-    private static final Matrix<N2, N1> kStateStdDevs = Matrix.mat(Nat.N2(), Nat.N1()).fill(2, 2);
-    // Low Output stdev: instruments are pretty accurate, especially velocity.
-    private static final Matrix<N2, N1> kOutputStdDevs = Matrix.mat(Nat.N2(), Nat.N1()).fill(0.5, 0.1);
+    // State position stdev
+    // State velocity stdev
+    // State accel stdev: set this low to try to make it smaller
+    private static final Matrix<N3, N1> kStateStdDevs = Matrix.mat(Nat.N3(), Nat.N1()).fill(1, 3, 5);
+    // Compass is pretty noisy, 0.1 radians
+    // Gyro stdev is extremely low, 0.005 radians/sec
+    private static final Matrix<N2, N1> kOutputStdDevs = Matrix.mat(Nat.N2(), Nat.N1()).fill(0.1, 0.1);
     // For now there is no Input.
     private static final Matrix<N1, N1> kControlInput = Matrix.mat(Nat.N1(), Nat.N1()).fill(0);
 
     private final Unroller m_mag;
     private final LSM6DSOX_I2C m_gyro;
     // 2 states, 1 input, 2 outputs
-    private final LinearSystem<N2, N1, N2> m_system;
-    private final KalmanFilter<N2, N1, N2> m_filter;
+    private final LinearSystem<N3, N1, N2> m_system;
+    private final KalmanFilter<N3, N1, N2> m_filter;
 
     public FusedHeading() {
         m_mag = new Unroller(new LIS3MDL_I2C());
         m_gyro = new LSM6DSOX_I2C();
-        m_system = new LinearSystem<N2, N1, N2>(kA, kB, kC, kD);
-        m_filter = new KalmanFilter<N2, N1, N2>(Nat.N2(), Nat.N2(), m_system, kStateStdDevs, kOutputStdDevs, kDtSec);
+        m_system = new LinearSystem<N3, N1, N2>(kA, kB, kC, kD);
+        m_filter = new KalmanFilter<N3, N1, N2>(Nat.N3(), Nat.N2(), m_system, kStateStdDevs, kOutputStdDevs, kDtSec);
+        System.out.println("====================== K ====================");
+        System.out.println(m_filter.getK().toString());
         SmartDashboard.putData("heading", this);
     }
 
@@ -69,10 +76,12 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
     }
 
     public void reset() {
-        m_filter.setXhat(getObservations());
+        Matrix<N2, N1> obs = getObservations();
+        m_filter.setXhat(0, obs.get(0,0));
+        m_filter.setXhat(1, obs.get(1,0));
     }
 
-    public Matrix<N2, N1> getState() {
+    public Matrix<N3, N1> getState() {
         return m_filter.getXhat();
     }
 
@@ -82,6 +91,10 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
 
     public double getVelocity() {
         return getState().get(1, 0);
+    }
+
+    public double getAcceleration() {
+        return getState().get(2, 0);
     }
 
     /**
@@ -98,6 +111,7 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("model position", this::getPosition, null);
         builder.addDoubleProperty("model velocity", this::getVelocity, null);
+        builder.addDoubleProperty("model acceleration", this::getAcceleration, null);
         builder.addDoubleProperty("unrolled mag nwu radians", this::getNWUMagRadians, null);
         builder.addDoubleProperty("gyro rate nwu radians per sec", this::getNWUGyroRadiansPerSec, null);
 
