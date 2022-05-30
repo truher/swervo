@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.sensors.FusedHeading;
 
 public class Drivetrain extends SubsystemBase {
+    private static final SwerveModuleState kQuiescentState = new SwerveModuleState();
     private static final double kMaxSpeedMetersPerSecond = 0.54;
     // Base is an equilateral triangle 0.2794m (11 inches) on a side. Positive
     // directions are x forward, y left, theta counterclockwise, measured from the x
@@ -67,6 +68,12 @@ public class Drivetrain extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates = kDriveKinematics.toSwerveModuleStates(
                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.get()));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeedMetersPerSecond);
+
+        // just for testing
+        //m_modules[0].setDesiredState(kQuiescentState);
+        //m_modules[1].setDesiredState(kQuiescentState);
+        //m_modules[2].setDesiredState(kQuiescentState);
+
         m_modules[0].setDesiredState(swerveModuleStates[0]);
         m_modules[1].setDesiredState(swerveModuleStates[1]);
         m_modules[2].setDesiredState(swerveModuleStates[2]);
