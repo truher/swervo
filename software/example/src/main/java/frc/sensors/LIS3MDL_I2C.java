@@ -162,6 +162,16 @@ public class LIS3MDL_I2C implements Supplier<Rotation2d>, Sendable {
      */
     @Override
     public Rotation2d get() {
+        m_raw = getRaw();
+        return m_raw;
+    }
+
+    public Rotation2d m_raw;
+
+    /**
+     * NED angle, like a compass.
+     */
+    private Rotation2d getRaw() {
         ByteBuffer buf = ByteBuffer.allocate(2);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         m_i2c.read(LIS3MDL_MAG_OUTX_L, 2, buf);
@@ -175,6 +185,6 @@ public class LIS3MDL_I2C implements Supplier<Rotation2d>, Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Gyro"); // gyro kinda like a compass
-        builder.addDoubleProperty("ned radians", () -> get().getRadians(), null);
+        builder.addDoubleProperty("ned radians", () -> m_raw.getRadians(), null);
     }
 }
