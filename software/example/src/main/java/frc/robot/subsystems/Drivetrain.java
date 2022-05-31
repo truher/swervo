@@ -17,6 +17,7 @@ public class Drivetrain extends SubsystemBase {
     // private static final SwerveModuleState kQuiescentState = new
     // SwerveModuleState();
     private static final double kMaxSpeedMetersPerSecond = 0.54;
+    private static final double kMaxAllowedCrossTrackErrorMeters = 0.05;
     // Base is an equilateral triangle 0.2794m (11 inches) on a side. Positive
     // directions are x forward, y left, theta counterclockwise, measured from the x
     // axis.
@@ -84,6 +85,22 @@ public class Drivetrain extends SubsystemBase {
         // m_modules[0].setDesiredState(kQuiescentState);
         // m_modules[1].setDesiredState(kQuiescentState);
         // m_modules[2].setDesiredState(kQuiescentState);
+
+        double maxCTE = 0;
+        for (int i = 0; i < 3; ++i) {
+            SwerveModuleState s = swerveModuleStates[i];
+            Module m = m_modules[i];
+            double steerRadiansToGo = m.m_steer.getPosition() - s.angle.getRadians();
+            double crossTrackErrorMeters = s.speedMetersPerSecond * Math.sin(steerRadiansToGo)
+                    / (Turner.kMaxVelocity / Turner.kGearRatio);
+            maxCTE = Math.max(maxCTE, crossTrackErrorMeters);
+        }
+
+        if (maxCTE > kMaxAllowedCrossTrackErrorMeters) {
+            for (SwerveModuleState s : swerveModuleStates) {
+                s.speedMetersPerSecond = s.speedMetersPerSecond * kMaxAllowedCrossTrackErrorMeters / maxCTE;
+            }
+        }
 
         m_modules[0].setDesiredState(swerveModuleStates[0]);
         m_modules[1].setDesiredState(swerveModuleStates[1]);

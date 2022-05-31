@@ -28,17 +28,13 @@ public class Turner extends ProfiledPIDSubsystem {
   private static final double kI = 0.05;
   private static final double kD = 0.0;
   // private static final double kMaxVelocity = 2.1;
-  private static final double kMaxVelocity = 13.2; // scaled to radians
+  public static final double kMaxVelocity = 13.2; // scaled to radians
   // private static final int kMaxAcceleration = 8;
   private static final int kMaxAcceleration = 50; // scaled to radians
   // private static final double kV = 0.4;
   private static final double kV = 0.064; // scaled to radians
-  private static final double kGearRatio = 4;
-  //// avoids moving from 0 to 0.5 on startup
-  // private static final double kInitialPosition = 0.5;
-  // point ahead
-  // actually fuck this
-  // private static final double kInitialPosition = 0.0;
+  public static final double kGearRatio = 4;
+
   private static final double kDtSec = 0.02;
 
   public final Parallax360 m_motor;
