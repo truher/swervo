@@ -67,7 +67,7 @@ public class Turner extends ProfiledPIDSubsystem {
             new TrapezoidProfile.Constraints(kMaxVelocity / kGearRatio, kMaxAcceleration / kGearRatio)),
         0);
     getController().enableContinuousInput(-Math.PI, Math.PI);
-    getController().setTolerance(0.005, 0.005); // 1.8 degrees
+    getController().setTolerance(0.1, 1);
     setName(String.format("Turning %d", channel));
     m_motor = new Parallax360(String.format("Turn Motor %d", channel), channel);
     m_input = new DutyCycleEncoder(channel);
@@ -120,9 +120,14 @@ public class Turner extends ProfiledPIDSubsystem {
 
   /**
    * Set motor output from [-1, 1]
+   * 
+   * Add deadband in a desperate attempt to remove shivering.
    */
   public void setMotorOutput(double value) {
-    m_motor.set(value);
+    if (Math.abs(value) < 0.15)
+      m_motor.set(0);
+    else
+      m_motor.set(value);
   }
 
   //

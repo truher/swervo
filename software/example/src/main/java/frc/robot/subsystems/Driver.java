@@ -13,8 +13,8 @@ public class Driver extends PIDSubsystem {
 
     private static final double kWheelDiameterMeters = 0.07;
     private static final double kV = 0.4; // motor output per turns/sec
-    private static final int kP = 0;
-    private static final double kI = 4;
+    private static final double kP = 0.1;
+    private static final double kI = 0.1;
     private static final double kD = 0;
     private static final double kMaxVelocityTurnsPerSec = 2.1;
 
@@ -68,9 +68,14 @@ public class Driver extends PIDSubsystem {
 
     /**
      * Motor units [-1, 1]
+     * 
+     * Add deadband in a desperate attempt to remove shivering.
      */
     public void setMotorOutput(double value) {
-        m_motor.set(value);
+        if (Math.abs(value) < 0.15)
+            m_motor.set(0);
+        else
+            m_motor.set(value);
     }
 
     /**
