@@ -7,22 +7,25 @@ package frc.robot.commands;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ExampleCommand extends CommandBase {
   private static final double kMaxSpeedMetersPerSec = 0.54;
   private static final double kRobotRadiusMeters = 0.1613;
-  private final XboxController m_input;
-  private final Drivetrain m_subsystem;
+  private final XboxController m_driverController;
+  private final Drivetrain m_drivetrain;
+  private final Field2d m_field;
 
   private double m_steer_input;
   private double m_drive_input;
 
-  public ExampleCommand(XboxController input, Drivetrain subsystem) {
-    m_input = input;
-    m_subsystem = subsystem;
-    addRequirements(subsystem);
+  public ExampleCommand(XboxController driverController, Drivetrain drivetrain, Field2d field) {
+    m_driverController = driverController;
+    m_drivetrain = drivetrain;
+    m_field = field;
+    addRequirements(drivetrain);
     SmartDashboard.putData("Example Command", this);
   }
 
@@ -47,10 +50,12 @@ public class ExampleCommand extends CommandBase {
     // m_subsystem.keepWheelsPointingNorth();
 
     // every axis of every joystick is backwards.
-    m_subsystem.drive(
-        -1.0 * kMaxSpeedMetersPerSec * m_input.getRightY(),
-        -1.0 * kMaxSpeedMetersPerSec * m_input.getRightX(),
-        -1.0 * kMaxSpeedMetersPerSec / kRobotRadiusMeters * m_input.getLeftX());
+    m_drivetrain.drive(
+        -1.0 * kMaxSpeedMetersPerSec * m_driverController.getRightY(),
+        -1.0 * kMaxSpeedMetersPerSec * m_driverController.getRightX(),
+        -1.0 * kMaxSpeedMetersPerSec / kRobotRadiusMeters * m_driverController.getLeftX());
+
+    m_field.setRobotPose(m_drivetrain.getPose());
   }
 
   public double getSteerInput() {
@@ -70,6 +75,6 @@ public class ExampleCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    m_subsystem.initialize();
+    m_drivetrain.initialize();
   }
 }
