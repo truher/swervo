@@ -2,13 +2,9 @@ package frc.sensors;
 
 import java.util.function.Supplier;
 
-import org.opencv.core.Core;
-import org.opencv.features2d.KAZE;
-
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
