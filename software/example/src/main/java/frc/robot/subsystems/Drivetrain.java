@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.sensors.FusedHeading;
 
 public class Drivetrain extends SubsystemBase {
-    // private static final SwerveModuleState kQuiescentState = new SwerveModuleState();
+    // private static final SwerveModuleState kQuiescentState = new
+    // SwerveModuleState();
     private static final double kMaxSpeedMetersPerSecond = 0.54;
     // Base is an equilateral triangle 0.2794m (11 inches) on a side. Positive
     // directions are x forward, y left, theta counterclockwise, measured from the x
@@ -22,8 +25,8 @@ public class Drivetrain extends SubsystemBase {
             new Translation2d(-0.0807, 0.1397), // left rear
             new Translation2d(-0.0807, -0.1397)); // right rear
     private final Module[] m_modules;
-    private final SwerveDriveOdometry m_odometry;
     private final FusedHeading m_gyro;
+    private final SwerveDrivePoseEstimator m_poseEstimator;
 
     public Drivetrain() {
         m_modules = new Module[] {
@@ -31,15 +34,22 @@ public class Drivetrain extends SubsystemBase {
                 new Module(2, 0.43, 3),
                 new Module(4, 0.85, 5)
         };
-        m_odometry = new SwerveDriveOdometry(kDriveKinematics, new Rotation2d(0));
         m_gyro = new FusedHeading();
         m_gyro.reset();
+        m_poseEstimator = new SwerveDrivePoseEstimator(
+                m_gyro.get(),
+                new Pose2d(),
+                kDriveKinematics,
+                VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+                VecBuilder.fill(Units.degreesToRadians(0.01)),
+                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
     }
 
     @Override
     public void periodic() {
         // Update the odometry in the periodic block
-        m_odometry.update(
+        m_poseEstimator.update(
                 m_gyro.get(),
                 m_modules[0].getState(),
                 m_modules[1].getState(),
@@ -71,9 +81,9 @@ public class Drivetrain extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeedMetersPerSecond);
 
         // just for testing
-        //m_modules[0].setDesiredState(kQuiescentState);
-        //m_modules[1].setDesiredState(kQuiescentState);
-        //m_modules[2].setDesiredState(kQuiescentState);
+        // m_modules[0].setDesiredState(kQuiescentState);
+        // m_modules[1].setDesiredState(kQuiescentState);
+        // m_modules[2].setDesiredState(kQuiescentState);
 
         m_modules[0].setDesiredState(swerveModuleStates[0]);
         m_modules[1].setDesiredState(swerveModuleStates[1]);
@@ -107,6 +117,6 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
+        return m_poseEstimator.getEstimatedPosition();
     }
 }
