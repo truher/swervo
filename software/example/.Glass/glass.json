@@ -1,7 +1,7 @@
 {
   "NetworkTables": {
     "SmartDashboard": {
-      "heading": {
+      "Field": {
         "open": true
       },
       "open": true
@@ -36,215 +36,21 @@
       "/SmartDashboard/Drive 3": "Subsystem",
       "/SmartDashboard/Drive 5": "Subsystem",
       "/SmartDashboard/Example Command": "Command",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Turning 0": "Subsystem",
       "/SmartDashboard/Turning 2": "Subsystem",
       "/SmartDashboard/Turning 4": "Subsystem"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {
     "mode": "Client",
     "serverTeam": "100"
-  },
-  "Plots": {
-    "Plot <0>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 134
-        }
-      ]
-    },
-    "Plot <1>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 135,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/velocity corrected"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <2>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 162,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/position predicted diff"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/position correction diff"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <3>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 173,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/velocity predicted diff"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/velocity correction diff"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <6>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 163,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/velocity observed"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <7>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 149,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/position diff"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <8>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 149,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/velocity diff"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <9>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 561,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/position observed"
-            },
-            {
-              "color": [
-                0.6901960968971252,
-                0.3787773847579956,
-                0.2980392277240753,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/heading/position corrected"
-            }
-          ]
-        }
-      ]
-    }
   }
 }
