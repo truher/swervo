@@ -146,7 +146,8 @@
               ],
               "id": "NT:/SmartDashboard/My Swerve Command/x error"
             }
-          ]
+          ],
+          "viewTime": 20.0
         }
       ]
     }
