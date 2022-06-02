@@ -7,17 +7,20 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.MyTrajectoryState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.math.TrackingConstraint;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -60,7 +63,8 @@ public class MySwerveCommand extends CommandBase {
                     new MyTrajectoryState(6, 0.25, 0, new Pose2d(1, 0, new Rotation2d(-1, 1)), 0),
                     new MyTrajectoryState(8, 0.25, 0, new Pose2d(1, 0.5, new Rotation2d(-1, 0)), 0),
                     new MyTrajectoryState(10, 0.25, 0, new Pose2d(1, 1, new Rotation2d(-1, -1)), 0),
-                    new MyTrajectoryState(12, 0.25, 0, new Pose2d(0.5, 1, new Rotation2d(0, -1)), 0),
+                    new MyTrajectoryState(12, 0.25, 0, new Pose2d(0.5, 1, new Rotation2d(0, -1)),
+                            0),
                     new MyTrajectoryState(14, 0.25, 0, new Pose2d(0, 1, new Rotation2d(1, -1)), 0),
                     new MyTrajectoryState(16, 0.25, 0, new Pose2d(0, 0.5, new Rotation2d(1, 0)), 0),
                     new MyTrajectoryState(18, 0.25, 0, new Pose2d(0, 0, new Rotation2d(1, 1)), 0),
@@ -91,27 +95,53 @@ public class MySwerveCommand extends CommandBase {
     public static final ProfiledPIDController kThetaController = new ProfiledPIDController(
             kPThetaController, 0, 0, kThetaControllerConstraints);
 
+    private static final double kMaxWheelSpeedMS = 0.4;
+    // private static final double kMaxWheelSpeedMS = 0.1;
+
     private final Drivetrain m_drivetrain;
     private final Timer m_timer;
     private final Trajectory m_trajectory;
     private final HolonomicDriveController m_controller;
     private final SwerveDriveKinematics m_kinematics;
+    private final TrajectoryConfig m_config;
+    private final Translation2d m_aimingPoint;
     private State m_desiredState;
     private double m_curTime;
 
     public MySwerveCommand(Drivetrain drivetrain) {
         m_timer = new Timer();
+        m_kinematics = Drivetrain.kDriveKinematics;
+        m_aimingPoint = new Translation2d(5, 2);
+        m_config = new TrajectoryConfig(1, 1).setKinematics(m_kinematics);
+        m_config.addConstraint(new TrackingConstraint(m_kinematics, kMaxWheelSpeedMS, m_aimingPoint));
+
         // m_trajectory = kExampleTrajectory;
-        m_trajectory = kSquareTrajectory;
+        // m_trajectory = kSquareTrajectory;
+        m_trajectory = squareOfTranslations(m_config);
         m_controller = new HolonomicDriveController(kXController, kYController, kThetaController);
         m_controller.setTolerance(new Pose2d(0.1, 0.1, new Rotation2d(0.1)));
         m_drivetrain = drivetrain;
-        m_kinematics = Drivetrain.kDriveKinematics;
+
         kThetaController.enableContinuousInput(-Math.PI, Math.PI);
         m_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         m_desiredState = new Trajectory.State();
         m_curTime = 0;
         SmartDashboard.putData("My Swerve Command", this);
+    }
+
+    /**
+     * 3x3 meter square centered at (0.5, 0.5), using translations, with start and
+     * end poses to make a circle.
+     */
+    public static Trajectory squareOfTranslations(TrajectoryConfig config) {
+        return TrajectoryGenerator.generateTrajectory(
+                new Pose2d(0, 0, new Rotation2d(1, -1)), // pose is in the direction of the first waypoint
+                List.of(
+                        new Translation2d(1, 0),
+                        new Translation2d(1, 1),
+                        new Translation2d(0, 1)),
+                new Pose2d(0, 0, new Rotation2d(1, -1)), // pose is in the direction from the last waypoint
+                config);
     }
 
     @Override
@@ -159,7 +189,8 @@ public class MySwerveCommand extends CommandBase {
         builder.addBooleanProperty("is scheduled", () -> isScheduled(), null);
         builder.addDoubleProperty("total runtime", () -> m_trajectory.getTotalTimeSeconds(), null);
         builder.addDoubleProperty("current time", () -> m_curTime, null);
-        builder.addDoubleProperty("desired state rotation", () -> m_desiredState.poseMeters.getRotation().getRadians(),
+        builder.addDoubleProperty("desired state rotation",
+                () -> m_desiredState.poseMeters.getRotation().getRadians(),
                 null);
         builder.addDoubleProperty("theta error", () -> kThetaController.getPositionError(), null);
         builder.addBooleanProperty("holo at ref", () -> m_controller.atReference(), null);
