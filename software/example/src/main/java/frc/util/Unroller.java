@@ -5,7 +5,9 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
- * Wrap any supplier of rotations to remove discontinuity.
+ * Wrap any supplier of rotations to remove discontinuity, so that the
+ * Kalman Filter will grok them.  Is there a way for the KF to understand
+ * wrapping?
  * 
  * Maintains the orientation (NED or NWU) of the supplier.
  */
