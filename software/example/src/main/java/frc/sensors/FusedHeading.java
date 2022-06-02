@@ -3,6 +3,7 @@ package frc.sensors;
 import java.util.function.Supplier;
 
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.KalmanFilter;
@@ -20,6 +21,9 @@ import frc.util.Unroller;
  * Combine mag and gyro with Kalman filter.
  * 
  * Mag is NED, gyro is NWU, we produce NWU.
+ * 
+ * Measurements are *unrolled* because I couldn't find a way to make the KF
+ * understand wrapping.
  */
 public class FusedHeading implements Supplier<Rotation2d>, Sendable {
     private static final double kDtSec = 0.02;
@@ -119,19 +123,23 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
 
     /**
      * Yaw in radians referenced to magnetic north, NWU orientation.
+     * 
+     * This measurement is WRAPPED unlike everything else in this class, because the
+     * gyro consumers expect it to be.
      */
     @Override
     public Rotation2d get() {
         // DataLogManager.log("FusedHeading.get()");
 
         // what is the predict step doing?
-        //var discABpair = Discretization.discretizeAB(kA, kB, kDtSec);
+        // var discABpair = Discretization.discretizeAB(kA, kB, kDtSec);
         var discA = Discretization.discretizeA(kA, kDtSec);
-       // HAL.sendConsoleLine(String.format("discA = [%10.5f %10.5f \n         %10.5f %10.5f]\n",
-       //         kDiscA.get(0, 0),
-       //         kDiscA.get(0, 1),
-        //        kDiscA.get(1, 0),
-        //        kDiscA.get(1, 1)));
+        // HAL.sendConsoleLine(String.format("discA = [%10.5f %10.5f \n %10.5f
+        // %10.5f]\n",
+        // kDiscA.get(0, 0),
+        // kDiscA.get(0, 1),
+        // kDiscA.get(1, 0),
+        // kDiscA.get(1, 1)));
         Matrix<N2, N1> state = m_filter.getXhat();
         Matrix<N2, N1> newState = discA.times(state);
         Matrix<N2, N1> stateDiff = newState.minus(state);
@@ -149,19 +157,19 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
         m_velPred = state.get(1, 0);
 
         // so the correction takes the observation and compares them to the state.
-        Matrix<N2,N1> diffs = obs.minus(kC.times(state));
-        m_posDiff = diffs.get(0,0);
-        m_velDiff = diffs.get(1,0);
+        Matrix<N2, N1> diffs = obs.minus(kC.times(state));
+        m_posDiff = diffs.get(0, 0);
+        m_velDiff = diffs.get(1, 0);
 
         Matrix<N2, N1> preCorrState = state;
         m_filter.correct(kControlInput, obs);
         state = m_filter.getXhat();
         m_posCorr = state.get(0, 0);
         m_velCorr = state.get(1, 0);
-        Matrix<N2,N1> corrDiff = state.minus(preCorrState);
-        m_posCorrDiff = corrDiff.get(0,0);
-        m_velCorrDiff = corrDiff.get(1,0);
-        return new Rotation2d(m_posCorr);
+        Matrix<N2, N1> corrDiff = state.minus(preCorrState);
+        m_posCorrDiff = corrDiff.get(0, 0);
+        m_velCorrDiff = corrDiff.get(1, 0);
+        return new Rotation2d(MathUtil.angleModulus(m_posCorr));
     }
 
     @Override
