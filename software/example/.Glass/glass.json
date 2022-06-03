@@ -56,6 +56,21 @@
       "/SmartDashboard/Turning 0": "Subsystem",
       "/SmartDashboard/Turning 2": "Subsystem",
       "/SmartDashboard/Turning 4": "Subsystem"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "height": 2.0,
+        "traj": {
+          "arrowSize": 32,
+          "arrowWeight": 1.0,
+          "style": "Box/Image",
+          "weight": 1.0
+        },
+        "width": 2.0,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {
