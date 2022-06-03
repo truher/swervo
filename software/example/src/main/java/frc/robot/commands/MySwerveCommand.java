@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.math.TrackingConstraint;
@@ -29,10 +30,10 @@ import frc.robot.subsystems.Drivetrain;
  */
 public class MySwerveCommand extends CommandBase {
 
-    public static final double kMaxSpeedMetersPerSecond = 0.5;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = 0.4;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 4;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 0.75 * Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 3 * Math.PI;
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
@@ -43,10 +44,11 @@ public class MySwerveCommand extends CommandBase {
             kMaxAngularSpeedRadiansPerSecondSquared);
 
     // default end velocity is zero.
-    public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(
-            kMaxSpeedMetersPerSecond,
-            kMaxAccelerationMetersPerSecondSquared)
-                    .setKinematics(Drivetrain.kDriveKinematics);
+    // public static final TrajectoryConfig kTrajectoryConfig = new
+    // TrajectoryConfig(
+    // kMaxSpeedMetersPerSecond,
+    // kMaxAccelerationMetersPerSecondSquared)
+    // .setKinematics(Drivetrain.kDriveKinematics);
 
     // turn 90 degrees in place
     public static final Trajectory kTurnLeft = new Trajectory(
@@ -95,7 +97,7 @@ public class MySwerveCommand extends CommandBase {
     public static final ProfiledPIDController kThetaController = new ProfiledPIDController(
             kPThetaController, 0, 0, kThetaControllerConstraints);
 
-    private static final double kMaxWheelSpeedMS = 0.4;
+    // private static final double kMaxWheelSpeedMS = 0.4;
     // private static final double kMaxWheelSpeedMS = 0.1;
 
     private final Drivetrain m_drivetrain;
@@ -107,23 +109,34 @@ public class MySwerveCommand extends CommandBase {
     private final Translation2d m_aimingPoint;
     private State m_desiredState;
     private double m_curTime;
+    private final Field2d m_field;
 
-    public MySwerveCommand(Drivetrain drivetrain) {
+    public MySwerveCommand(Drivetrain drivetrain, Field2d field) {
+        m_drivetrain = drivetrain;
+        m_field = field;
         m_timer = new Timer();
         m_kinematics = Drivetrain.kDriveKinematics;
-        m_aimingPoint = new Translation2d(5, 2);
-        m_config = new TrajectoryConfig(1, 1).setKinematics(m_kinematics);
-        m_config.addConstraint(new TrackingConstraint(m_kinematics, kMaxWheelSpeedMS, m_aimingPoint));
+        m_aimingPoint = new Translation2d(0.5, -0.5);
+        m_config = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(m_kinematics);
+        m_config.addConstraint(
+                new TrackingConstraint(
+                        m_kinematics,
+                        kMaxSpeedMetersPerSecond,
+                        m_aimingPoint));
 
         // m_trajectory = kExampleTrajectory;
         // m_trajectory = kSquareTrajectory;
         m_trajectory = squareOfTranslations(m_config);
+        TrackingConstraint.setAimingPoint(m_trajectory, m_aimingPoint);
+        field.getObject("traj").setTrajectory(m_trajectory);
+
         m_controller = new HolonomicDriveController(kXController, kYController, kThetaController);
         m_controller.setTolerance(new Pose2d(0.1, 0.1, new Rotation2d(0.1)));
-        m_drivetrain = drivetrain;
+   
 
         kThetaController.enableContinuousInput(-Math.PI, Math.PI);
-        m_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+        //m_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         m_desiredState = new Trajectory.State();
         m_curTime = 0;
         SmartDashboard.putData("My Swerve Command", this);
@@ -149,7 +162,9 @@ public class MySwerveCommand extends CommandBase {
         m_curTime = m_timer.get();
         m_desiredState = m_trajectory.sample(m_curTime);
 
-        ChassisSpeeds targetChassisSpeeds = m_controller.calculate(m_drivetrain.getPose(), m_desiredState,
+        Pose2d pose = m_drivetrain.getPose();
+        m_field.setRobotPose(pose);
+        ChassisSpeeds targetChassisSpeeds = m_controller.calculate(pose, m_desiredState,
                 m_desiredState.poseMeters.getRotation());
         var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 

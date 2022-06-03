@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.constraint.TrajectoryConstraint;
 
 public class TrackingConstraint implements TrajectoryConstraint {
@@ -21,6 +22,20 @@ public class TrackingConstraint implements TrajectoryConstraint {
         m_maxSpeedMetersPerSecond = maxSpeedMetersPerSecond;
         m_kinematics = kinematics;
         m_aimingPoint = aimingPoint;
+    }
+
+    /*
+     * replace the rotation of the trajectory with a rotation aiming at a fixed
+     * point.
+     */
+    public static Trajectory setAimingPoint(Trajectory trajectory, Translation2d aimingPoint) {
+        for (Trajectory.State state : trajectory.getStates()) {
+            double dx = aimingPoint.getX() - state.poseMeters.getX();
+            double dy = aimingPoint.getY() - state.poseMeters.getY();
+            Rotation2d rot = new Rotation2d(dx, dy);
+            state.poseMeters = new Pose2d(state.poseMeters.getTranslation(), rot);
+        }
+        return trajectory;
     }
 
     /**

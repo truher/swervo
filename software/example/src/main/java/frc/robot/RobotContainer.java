@@ -28,8 +28,8 @@ public class RobotContainer {
     m_field = new Field2d();
     m_teleopCommand = new ExampleCommand(m_driverController, m_drivetrain, m_field);
     // TODO: make this stop some other way.
-    m_autonomousCommand = new MySwerveCommand(m_drivetrain).andThen(() -> m_drivetrain.drive(0, 0, 0));
-    SmartDashboard.putData(m_field);
+    m_autonomousCommand = new MySwerveCommand(m_drivetrain, m_field).andThen(() -> m_drivetrain.drive(0, 0, 0));
+    SmartDashboard.putData("Field", m_field);
   }
 
   public Command getTeleopCommand() {
