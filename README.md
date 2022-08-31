@@ -24,3 +24,8 @@ and which can be driven directly by the RIO at about 120 RPM.
 direct drive.
 
 Both are expensive parts, but they make the design very simple: no motor controllers, no PDP, no encoders, no linkages, etc.
+
+Here's an example, executing a kinda-square path with a fixed aiming point:
+
+<a href="https://www.youtube.com/watch?v=jptHhhOOdmU"><img src="https://img.youtube.com/vi/jptHhhOOdmU/0.jpg"></a>
+          
