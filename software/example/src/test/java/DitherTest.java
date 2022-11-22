@@ -1,7 +1,8 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import frc.math.Dither;
 
 public class DitherTest {
@@ -36,7 +37,7 @@ public class DitherTest {
             }
         }
         int diff = hi - lo;
-        assertTrue(String.format("hi: %d, lo: %d", hi, lo), diff < 100);
+        assertTrue(diff < 100, String.format("hi: %d, lo: %d", hi, lo));
     }
 }
 

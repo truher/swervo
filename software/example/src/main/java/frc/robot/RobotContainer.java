@@ -37,9 +37,9 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     new JoystickButton(
-        m_driverController, XboxController.Button.kX.value).whenHeld(
-            Goto.makeGoto(m_drivetrain)
-        );
+        m_driverController,
+        XboxController.Button.kX.value).whileTrue(
+            Goto.makeGoto(m_drivetrain));
   }
 
   public Command getTeleopCommand() {

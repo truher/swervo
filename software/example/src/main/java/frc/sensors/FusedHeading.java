@@ -2,7 +2,7 @@ package frc.sensors;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.hal.HAL;
+import edu.wpi.first.hal.DriverStationJNI;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -63,10 +63,10 @@ public class FusedHeading implements Supplier<Rotation2d>, Sendable {
         m_system = new LinearSystem<N2, N1, N2>(kA, kB, kC, kD);
         m_filter = new KalmanFilter<N2, N1, N2>(Nat.N2(), Nat.N2(), m_system, kStateStdDevs, kOutputStdDevs, kDtSec);
         Matrix<N2, N2> K = m_filter.getK();
-        HAL.sendConsoleLine(K.toString());
-        HAL.sendConsoleLine(String.format("K = [%10.5f %10.5f \n     %10.5f %10.5f]\n",
+        DriverStationJNI.sendConsoleLine(K.toString());
+        DriverStationJNI.sendConsoleLine(String.format("K = [%10.5f %10.5f \n     %10.5f %10.5f]\n",
                 K.get(0, 0), K.get(0, 1), K.get(1, 0), K.get(1, 1)));
-        HAL.sendConsoleLine(String.format("discA = [%10.5f %10.5f \n         %10.5f %10.5f]\n",
+        DriverStationJNI.sendConsoleLine(String.format("discA = [%10.5f %10.5f \n         %10.5f %10.5f]\n",
                 kDiscA.get(0, 0),
                 kDiscA.get(0, 1),
                 kDiscA.get(1, 0),
