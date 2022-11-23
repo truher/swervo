@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Goto;
 import frc.robot.commands.MySwerveCommand;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final XboxController m_driverController;
@@ -27,9 +29,17 @@ public class RobotContainer {
     m_drivetrain = new Drivetrain();
     m_field = new Field2d();
     m_teleopCommand = new ExampleCommand(m_driverController, m_drivetrain, m_field);
-    // TODO: make this stop some other way.
+    // make this stop some other way.
     m_autonomousCommand = new MySwerveCommand(m_drivetrain, m_field).andThen(() -> m_drivetrain.drive(0, 0, 0));
+    configureButtonBindings();
     SmartDashboard.putData("Field", m_field);
+  }
+
+  private void configureButtonBindings() {
+    new JoystickButton(
+        m_driverController,
+        XboxController.Button.kX.value).whileTrue(
+            Goto.makeGoto(m_drivetrain));
   }
 
   public Command getTeleopCommand() {

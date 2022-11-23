@@ -1,10 +1,11 @@
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Supplier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import frc.util.Unroller;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -34,7 +35,7 @@ public class UnrollerTest {
         TestSupplier s = new TestSupplier();
         Unroller c = new Unroller(s);
         for (int i = 0; i < 8; ++i)
-            assertEquals(String.format("i=%d", i), s.expected().getRadians(), c.get().getRadians(), DELTA);
+            assertEquals(s.expected().getRadians(), c.get().getRadians(), DELTA, String.format("i=%d", i));
 
     }
 }

@@ -1,5 +1,6 @@
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.math.filter.LinearFilter;
 

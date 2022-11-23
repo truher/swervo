@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /**
@@ -24,6 +25,12 @@ public class Module {
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(m_drive.getMeasurement(),
+                new Rotation2d(m_steer.getPosition()));
+    }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(
+                m_drive.getDistance(),
                 new Rotation2d(m_steer.getPosition()));
     }
 
