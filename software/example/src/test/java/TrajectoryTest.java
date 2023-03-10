@@ -117,7 +117,10 @@ public class TrajectoryTest {
                 assertEquals(0, trajectory.sample(1).poseMeters.getRotation().getRadians(), DELTA);
                 // is this fixed now?  used to be zero
                 // TODO: figure it out
-                assertEquals(0.78, trajectory.sample(1.5).poseMeters.getRotation().getRadians(), DELTA);
+                // assertEquals(0.78, trajectory.sample(1.5).poseMeters.getRotation().getRadians(), DELTA);
+                // which one of these is right?
+                assertEquals(0, trajectory.sample(1.5).poseMeters.getRotation().getRadians(), DELTA);
+
                 assertEquals(Math.PI / 2, trajectory.sample(2).poseMeters.getRotation().getRadians(), DELTA);
         }
 

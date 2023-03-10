@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,9 +9,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N4;
-import edu.wpi.first.math.numbers.N6;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,7 +29,7 @@ public class Drivetrain extends SubsystemBase {
     private final Module[] m_modules;
     private final FusedHeading m_gyro;
     // <num modules + 3, num modules + 3, num modules + 1>
-    private final SwerveDrivePoseEstimator<N6, N6, N4> m_poseEstimator;
+    private final SwerveDrivePoseEstimator m_poseEstimator;
 
     public Drivetrain() {
         m_modules = new Module[] {
@@ -45,10 +41,8 @@ public class Drivetrain extends SubsystemBase {
         m_gyro.reset();
         Rotation2d gyroRotation = m_gyro.get();
         m_poseEstimator =
-        new SwerveDrivePoseEstimator<N6, N6, N4>(
-            Nat.N6(), 
-            Nat.N6(),
-            Nat.N4(),
+        new SwerveDrivePoseEstimator(
+            kDriveKinematics,
                 gyroRotation,
                 new SwerveModulePosition[] {
                     m_modules[0].getPosition(),
@@ -56,10 +50,8 @@ public class Drivetrain extends SubsystemBase {
                     m_modules[2].getPosition()
                 },
                 new Pose2d(0, 0, gyroRotation),
-                kDriveKinematics,
-                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5), 0.5, 0.5, 0.5),
-                VecBuilder.fill(Units.degreesToRadians(0.01), 0.1, 0.1, 0.1),
-                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+                VecBuilder.fill(0.5, 0.5, 0.5),
+                VecBuilder.fill(0.1, 0.1, 0.1));
         SmartDashboard.putData("Drivetrain", this);
     }
 
@@ -68,11 +60,6 @@ public class Drivetrain extends SubsystemBase {
         // Update the odometry in the periodic block
         m_poseEstimator.update(
                 m_gyro.get(),
-                new SwerveModuleState[] {
-                        m_modules[0].getState(),
-                        m_modules[1].getState(),
-                        m_modules[2].getState()
-                },
                 new SwerveModulePosition[] {
                         m_modules[0].getPosition(),
                         m_modules[1].getPosition(),
